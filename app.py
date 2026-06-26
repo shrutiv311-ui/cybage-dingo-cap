@@ -207,7 +207,7 @@ h1, h2, h3, h4 { font-family: 'Syne', sans-serif; letter-spacing: -0.02em; }
     background: rgba(255,255,255,0.04) !important;
     border: 1px solid rgba(255,255,255,0.1) !important;
     color: white !important;
-    -webkit-text-fill-color: white !important;
+    -webkit-text-fill-color: rgba(0, 0, 0, 0.85) !important;
     border-radius: 10px !important;
 }
 
