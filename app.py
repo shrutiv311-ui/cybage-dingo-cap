@@ -470,8 +470,8 @@ COLLATERALS = [
         "type": "case-study",
         "summary": "How server-side tagging and GA4 migration restored full attribution for a mid-market retailer.",
         "services": ["Analytics & Business Intelligence"],
-        "file_url": "https://ofvhlmeuunrfzzmcpvor.supabase.co/storage/v1/object/public/collaterals/analytics-case-study.pdf",
-        "preview_url": "https://ofvhlmeuunrfzzmcpvor.supabase.co/storage/v1/object/public/collaterals/previews/13065.png",
+        "file_url": "https://ofvhlmeuunrfzzmcpvor.supabase.co/storage/v1/object/public/collaterals/case-studies/analytics%20case%20study.pdf",
+        "preview_url": "https://ofvhlmeuunrfzzmcpvor.supabase.co/storage/v1/object/public/collaterals/previews/13065.jpg",
     },
     {
         "id": 2,
@@ -479,8 +479,8 @@ COLLATERALS = [
         "type": "case-study",
         "summary": "Statistical MMM revealed 28% budget reallocation opportunity across offline & digital.",
         "services": ["Media Mix Modeling (MMM)"],
-        "file_url": "https://ofvhlmeuunrfzzmcpvor.supabase.co/storage/v1/object/public/collaterals/mmm-case-study.pdf",
-        "preview_url": "https://ofvhlmeuunrfzzmcpvor.supabase.co/storage/v1/object/public/collaterals/previews/20892596.png",
+        "file_url": "https://ofvhlmeuunrfzzmcpvor.supabase.co/storage/v1/object/public/collaterals/case-studies/MMM%20%20case%20study.pdf",
+        "preview_url": "https://ofvhlmeuunrfzzmcpvor.supabase.co/storage/v1/object/public/collaterals/previews/20892596.jpg",
     },
     {
         "id": 3,
@@ -488,8 +488,8 @@ COLLATERALS = [
         "type": "deck",
         "summary": "Full overview of our paid search, social, and programmatic offering with pricing tiers.",
         "services": ["Paid Advertising Support"],
-        "file_url": "https://ofvhlmeuunrfzzmcpvor.supabase.co/storage/v1/object/public/collaterals/paid-media-deck.pdf",
-        "preview_url": "https://ofvhlmeuunrfzzmcpvor.supabase.co/storage/v1/object/public/collaterals/previews/4061.png",
+        "file_url": "https://ofvhlmeuunrfzzmcpvor.supabase.co/storage/v1/object/public/collaterals/decks/paid-media-deck.pdf",
+        "preview_url": "https://ofvhlmeuunrfzzmcpvor.supabase.co/storage/v1/object/public/collaterals/previews/4061.jpg",
     },
     {
         "id": 4,
@@ -497,8 +497,8 @@ COLLATERALS = [
         "type": "case-study",
         "summary": "ICP development, competitive benchmarking, and launch orchestration for a B2B SaaS client.",
         "services": ["Go-To-Market (GTM) Strategies"],
-        "file_url": "https://ofvhlmeuunrfzzmcpvor.supabase.co/storage/v1/object/public/collaterals/gtm-case-study.pdf",
-        "preview_url": "https://ofvhlmeuunrfzzmcpvor.supabase.co/storage/v1/object/public/collaterals/previews/7431.png",
+        "file_url": "https://ofvhlmeuunrfzzmcpvor.supabase.co/storage/v1/object/public/collaterals/case-studies/GTM%20case%20study.pdf",
+        "preview_url": "https://ofvhlmeuunrfzzmcpvor.supabase.co/storage/v1/object/public/collaterals/previews/7431.jpg",
     },
     {
         "id": 5,
@@ -506,8 +506,8 @@ COLLATERALS = [
         "type": "case-study",
         "summary": "How lead scoring + SEO restructuring cut unqualified MQLs by 60% in 90 days.",
         "services": ["Inbound & Content Marketing"],
-        "file_url": "https://ofvhlmeuunrfzzmcpvor.supabase.co/storage/v1/object/public/collaterals/inbound-case-study.pdf",
-        "preview_url": "https://ofvhlmeuunrfzzmcpvor.supabase.co/storage/v1/object/public/collaterals/previews/267132-P5L989-24.png",
+        "file_url": "https://ofvhlmeuunrfzzmcpvor.supabase.co/storage/v1/object/public/collaterals/case-studies/inbound%20case%20study.pdf",
+        "preview_url": "https://ofvhlmeuunrfzzmcpvor.supabase.co/storage/v1/object/public/collaterals/previews/267132-P5L989-24.jpg",
     },
     {
         "id": 6,
@@ -517,8 +517,8 @@ COLLATERALS = [
         "services": ["Analytics & Business Intelligence", "Media Mix Modeling (MMM)",
                      "Paid Advertising Support", "Go-To-Market (GTM) Strategies",
                      "Inbound & Content Marketing"],
-        "file_url": "https://ofvhlmeuunrfzzmcpvor.supabase.co/storage/v1/object/public/collaterals/cybage-digital-brochure.pdf",
-        "preview_url": "https://ofvhlmeuunrfzzmcpvor.supabase.co/storage/v1/object/public/collaterals/previews/267132-P5L989-24.png",
+        "file_url": "https://ofvhlmeuunrfzzmcpvor.supabase.co/storage/v1/object/public/collaterals/brochures/cybage%20digital%20brochure.pdf",
+        "preview_url": "https://ofvhlmeuunrfzzmcpvor.supabase.co/storage/v1/object/public/collaterals/previews/267132-P5L989-24.jpg",
     },
     {
         "id": 7,
@@ -526,8 +526,8 @@ COLLATERALS = [
         "type": "brochure",
         "summary": "Deep dive into our conversion optimization and behavior analytics methodology.",
         "services": ["Analytics & Business Intelligence", "Paid Advertising Support"],
-        "file_url": "https://ofvhlmeuunrfzzmcpvor.supabase.co/storage/v1/object/public/collaterals/cro-brochure.pdf",
-        "preview_url": "https://ofvhlmeuunrfzzmcpvor.supabase.co/storage/v1/object/public/collaterals/previews/337036-PA5S8C-849.png",
+        "file_url": "https://ofvhlmeuunrfzzmcpvor.supabase.co/storage/v1/object/public/collaterals/brochures/cro-brochure.pdf",
+        "preview_url": "https://ofvhlmeuunrfzzmcpvor.supabase.co/storage/v1/object/public/collaterals/previews/337036-PA5S8C-849.jpg",
     },
     {
         "id": 8,
@@ -535,8 +535,8 @@ COLLATERALS = [
         "type": "deck",
         "summary": "Executive-ready deck positioning Cybage's paid media capabilities vs. competitors.",
         "services": ["Paid Advertising Support", "Media Mix Modeling (MMM)"],
-        "file_url": "https://ofvhlmeuunrfzzmcpvor.supabase.co/storage/v1/object/public/collaterals/perf-marketing-deck.pdf",
-        "preview_url": "https://ofvhlmeuunrfzzmcpvor.supabase.co/storage/v1/object/public/collaterals/previews/337036-PA5S8C-849.png",
+        "file_url": "https://ofvhlmeuunrfzzmcpvor.supabase.co/storage/v1/object/public/collaterals/decks/perf-marketing-deck.pdf",
+        "preview_url": "https://ofvhlmeuunrfzzmcpvor.supabase.co/storage/v1/object/public/collaterals/previews/337036-PA5S8C-849.jpg",
     },
 ]
 
