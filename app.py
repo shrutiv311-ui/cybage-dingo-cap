@@ -287,249 +287,72 @@ label, [data-testid="stMarkdownContainer"] p { color: #8899BB !important; }
 </style>
 """, unsafe_allow_html=True)
 
+
 # ─────────────────────────────────────────────
-# DATA LAYER  (fully self-contained, no Supabase needed to run)
+# SUPABASE CONNECTION
+# ─────────────────────────────────────────────
+from supabase import create_client
+import streamlit as st
+
+@st.cache_resource
+def get_supabase():
+    """Initialize Supabase client with credentials from secrets."""
+    url = st.secrets["supabase"]["url"]
+    key = st.secrets["supabase"]["key"]
+    return create_client(url, key)
+
+supabase = get_supabase()
+
+# ─────────────────────────────────────────────
+# DATA LAYER (from Supabase)
 # ─────────────────────────────────────────────
 
-DIAGNOSTIC_MAPPING = {
-    "Analytics & Business Intelligence": {
-        "keywords": [
-            "track", "ga4", "tagging", "gtm", "server-side", "cookie", "attribution",
-            "journey", "dashboard", "looker", "power bi", "data silos", "reporting",
-            "metrics", "conversion rate", "cro", "drop-off", "analytics", "visibility",
-            "pixel", "data", "measure", "insight", "report", "funnel visibility",
-        ],
-        "micro_services": [
-            "Server-Side Tagging & Privacy-First Tracking Setups",
-            "GA4 Architecture Audits & Advanced Event Implementation",
-            "Automated Looker Studio & Power BI Dashboard Engineering",
-            "Multi-Touch Attribution Modeling & Funnel Leakage Analysis",
-            "Conversion Rate Optimization (CRO) & User Behavior Mapping",
-        ],
-        "diagnostic_explanation": (
-            "Your inputs indicate gaps in visibility, tracking compliance, or data fragmentation. "
-            "We resolve this by auditing your tracking setup, deploying robust server-side analytics, "
-            "and building unified dashboards to illuminate the exact customer journey."
-        ),
-        "icon": "📊",
-    },
-    "Media Mix Modeling (MMM)": {
-        "keywords": [
-            "mmm", "budget allocation", "incrementality", "diminishing returns", "spend optimization",
-            "forecasting", "marketing mix", "offline impact", "external factors", "channel performance",
-            "macro economic", "cookieless measurement", "long-term value", "budget", "spend",
-            "channel", "media", "allocation", "mix",
-        ],
-        "micro_services": [
-            "Privacy-Safe Statistical Media Mix Modeling",
-            "Cross-Channel Budget Optimization & Forecasting",
-            "Incrementality Testing & Lift Analysis",
-            "External Factor (Seasonality/Economic) Impact Analysis",
-        ],
-        "diagnostic_explanation": (
-            "You are facing challenges with macro-level budget efficiency and privacy-safe measurement. "
-            "Our MMM frameworks analyze historical spend patterns to isolate the true incremental impact "
-            "of every dollar, without relying on user-level cookies."
-        ),
-        "icon": "📈",
-    },
-    "Paid Advertising Support": {
-        "keywords": [
-            "cac", "cpa", "roi", "roas", "expensive ads", "google ads", "meta ads",
-            "linkedin ads", "ad spend", "paid media", "bidding", "targeting", "lead cost",
-            "performance marketing", "search ads", "programmatic", "ads", "advertising",
-            "paid", "cost per", "acquisition cost", "return on ad",
-        ],
-        "micro_services": [
-            "Paid Search & Social Campaign Restructuring",
-            "Audience Segmentation & First-Party Data Targeting",
-            "Smart Bidding Optimization & Ad Fraud Mitigation",
-            "Creative Testing Frameworks & Copywriting Support",
-        ],
-        "diagnostic_explanation": (
-            "Your primary bottleneck is performance marketing efficiency and rising acquisition costs. "
-            "We deploy advanced bidding tactics, tighten audience targeting using first-party data, "
-            "and eliminate wasted ad spend across digital networks."
-        ),
-        "icon": "🎯",
-    },
-    "Go-To-Market (GTM) Strategies": {
-        "keywords": [
-            "launch", "scale", "positioning", "audience", "market entry", "penetration",
-            "competitor", "product launch", "value proposition", "icp", "ideal customer",
-            "commercialization", "expansion", "new market", "growth", "strategy",
-            "go-to-market", "gtm", "brand", "persona",
-        ],
-        "micro_services": [
-            "Ideal Customer Profile (ICP) & Persona Development",
-            "Competitive Landscape Mapping & Benchmarking",
-            "Multi-Channel Launch Orchestration Playbooks",
-            "Value Proposition & Messaging Framework Design",
-        ],
-        "diagnostic_explanation": (
-            "You are focusing on a new market, product launch, or audience expansion. We build "
-            "robust, data-backed market-entry blueprints that define exactly who your buyer is, "
-            "where to find them, and how to out-position the competition."
-        ),
-        "icon": "🚀",
-    },
-    "Inbound & Content Marketing": {
-        "keywords": [
-            "seo", "organic", "traffic", "content", "blog", "leads", "unqualified",
-            "nurturing", "email marketing", "hubspot", "automation", "whitepapers", "funnel",
-            "inbound", "content strategy", "lead generation", "qualify", "top of funnel",
-            "awareness", "engagement",
-        ],
-        "micro_services": [
-            "Technical SEO & Content Velocity Audits",
-            "B2B Lead Nurturing & Marketing Automation Workflows",
-            "High-Intent Content Mapping & Asset Creation",
-            "Inbound Funnel Mapping & Lead Scoring Setups",
-        ],
-        "diagnostic_explanation": (
-            "Your inputs point to issues with low organic visibility or poor lead quality. "
-            "We restructure your inbound funnel, implement precise lead scoring to weed out "
-            "unqualified sign-ups, and optimize content for high-intent organic traffic."
-        ),
-        "icon": "✍️",
-    },
-}
+@st.cache_data(ttl=3600)
+def load_services():
+    """Fetch all services from services_matrix table."""
+    response = supabase.table("services_matrix").select("*").execute()
+    services = response.data
+    
+    # Organize by macro_service name
+    mapping = {}
+    for row in services:
+        macro = row["macro_service"]
+        if macro not in mapping:
+            mapping[macro] = {
+                "keywords": [],
+                "micro_services": [],
+                "diagnostic_explanation": "",
+                "icon": "⚙️"  # default icon
+            }
+        mapping[macro]["micro_services"].append(row["micro_service"])
+        if row["description"]:
+            mapping[macro]["diagnostic_explanation"] = row["description"]
+    
+    return mapping
 
-SYNONYM_MAP = {
-    # Paid Advertising
-    "cac": ["Paid Advertising Support", "Media Mix Modeling (MMM)"],
-    "cpa": ["Paid Advertising Support", "Media Mix Modeling (MMM)"],
-    "roas": ["Paid Advertising Support", "Media Mix Modeling (MMM)"],
-    "roi":  ["Paid Advertising Support", "Media Mix Modeling (MMM)"],
-    "expensive ads": ["Paid Advertising Support"],
-    "ad spend": ["Paid Advertising Support"],
-    "google ads": ["Paid Advertising Support"],
-    "meta ads": ["Paid Advertising Support"],
-    "linkedin ads": ["Paid Advertising Support"],
-    # Analytics
-    "ga4": ["Analytics & Business Intelligence"],
-    "funnel": ["Analytics & Business Intelligence", "Inbound & Content Marketing"],
-    "tracking": ["Analytics & Business Intelligence"],
-    "attribution": ["Analytics & Business Intelligence", "Media Mix Modeling (MMM)"],
-    "cookie": ["Analytics & Business Intelligence", "Media Mix Modeling (MMM)"],
-    "journey": ["Analytics & Business Intelligence"],
-    "data silo": ["Analytics & Business Intelligence"],
-    "dashboard": ["Analytics & Business Intelligence"],
-    "drop off": ["Analytics & Business Intelligence"],
-    # GTM
-    "launch": ["Go-To-Market (GTM) Strategies"],
-    "scale": ["Go-To-Market (GTM) Strategies"],
-    "positioning": ["Go-To-Market (GTM) Strategies"],
-    "icp": ["Go-To-Market (GTM) Strategies"],
-    # Inbound
-    "seo": ["Inbound & Content Marketing"],
-    "organic": ["Inbound & Content Marketing"],
-    "unqualified leads": ["Inbound & Content Marketing"],
-    "nurture": ["Inbound & Content Marketing"],
-    "email": ["Inbound & Content Marketing"],
-    # MMM
-    "budget allocation": ["Media Mix Modeling (MMM)"],
-    "incrementality": ["Media Mix Modeling (MMM)"],
-    "mmm": ["Media Mix Modeling (MMM)"],
-    "media mix": ["Media Mix Modeling (MMM)"],
-}
+@st.cache_data(ttl=3600)
+def load_collaterals():
+    """Fetch all collaterals from collaterals table."""
+    response = supabase.table("collaterals").select("*").execute()
+    return response.data
 
-COMMON_PAIN_POINTS = {
-    "📉 Declining marketing ROI": "roi roas budget allocation spend optimization diminishing returns",
-    "🚫 Leads are not qualified": "unqualified leads inbound content seo funnel lead scoring nurturing",
-    "🔍 Can't track customer journey": "tracking attribution ga4 journey cookie data silo analytics",
-    "🧩 Data silos across platforms": "data silo dashboard reporting visibility analytics funnel",
-    "💸 High customer acquisition cost (CAC)": "cac cpa expensive ads paid media bidding ad spend",
-    "📊 No clear marketing attribution": "attribution multi-touch incrementality mmm media mix",
-    "🌱 Low organic traffic / weak SEO": "seo organic traffic content blog inbound",
-    "🚀 Planning a new product / market launch": "launch scale positioning icp gtm market entry",
-    "🎯 Poor ad targeting & wasted spend": "targeting programmatic audience segmentation paid media",
-    "📧 Email marketing underperforming": "email nurturing automation hubspot marketing automation",
-}
+@st.cache_data(ttl=3600)
+def load_pain_points():
+    """Fetch all pain points from pain_point_map table."""
+    response = supabase.table("pain_point_map").select("*").execute()
+    pain_map = {}
+    for row in response.data:
+        pain_map[row["label"]] = row["keyword_string"]
+    return pain_map
 
-COLLATERALS = [
-    {
-        "id": 1,
-        "title": "E-Commerce Analytics Overhaul: 3× ROAS Recovery",
-        "type": "case-study",
-        "summary": "How server-side tagging and GA4 migration restored full attribution for a mid-market retailer.",
-        "services": ["Analytics & Business Intelligence"],
-        "file_url": "https://example-supabase.supabase.co/storage/v1/object/public/collaterals/analytics-case-study.pdf",
-        "preview_url": "https://example-supabase.supabase.co/storage/v1/object/public/collaterals/previews/analytics-case-study-preview.png",
-    },
-    {
-        "id": 2,
-        "title": "Media Mix Modeling for an FMCG Brand",
-        "type": "case-study",
-        "summary": "Statistical MMM revealed 28% budget reallocation opportunity across offline & digital.",
-        "services": ["Media Mix Modeling (MMM)"],
-        "file_url": "https://example-supabase.supabase.co/storage/v1/object/public/collaterals/mmm-case-study.pdf",
-        "preview_url": "https://example-supabase.supabase.co/storage/v1/object/public/collaterals/previews/mmm-preview.png",
-    },
-    {
-        "id": 3,
-        "title": "Cybage Paid Media Services – Capability Deck",
-        "type": "deck",
-        "summary": "Full overview of our paid search, social, and programmatic offering with pricing tiers.",
-        "services": ["Paid Advertising Support"],
-        "file_url": "https://example-supabase.supabase.co/storage/v1/object/public/collaterals/paid-media-deck.pdf",
-        "preview_url": "https://example-supabase.supabase.co/storage/v1/object/public/collaterals/previews/paid-media-preview.png",
-    },
-    {
-        "id": 4,
-        "title": "B2B SaaS GTM Playbook: 0 → $2M ARR",
-        "type": "case-study",
-        "summary": "ICP development, competitive benchmarking, and launch orchestration for a B2B SaaS client.",
-        "services": ["Go-To-Market (GTM) Strategies"],
-        "file_url": "https://example-supabase.supabase.co/storage/v1/object/public/collaterals/gtm-case-study.pdf",
-        "preview_url": "https://example-supabase.supabase.co/storage/v1/object/public/collaterals/previews/gtm-preview.png",
-    },
-    {
-        "id": 5,
-        "title": "Inbound Engine: 5× Lead Quality Improvement",
-        "type": "case-study",
-        "summary": "How lead scoring + SEO restructuring cut unqualified MQLs by 60% in 90 days.",
-        "services": ["Inbound & Content Marketing"],
-        "file_url": "https://example-supabase.supabase.co/storage/v1/object/public/collaterals/inbound-case-study.pdf",
-        "preview_url": "https://example-supabase.supabase.co/storage/v1/object/public/collaterals/previews/inbound-preview.png",
-    },
-    {
-        "id": 6,
-        "title": "Digital Marketing Services Brochure 2025",
-        "type": "brochure",
-        "summary": "One-pager covering all five Cybage Digital capability areas with service highlights.",
-        "services": ["Analytics & Business Intelligence", "Media Mix Modeling (MMM)",
-                     "Paid Advertising Support", "Go-To-Market (GTM) Strategies",
-                     "Inbound & Content Marketing"],
-        "file_url": "https://example-supabase.supabase.co/storage/v1/object/public/collaterals/cybage-digital-brochure.pdf",
-        "preview_url": "https://example-supabase.supabase.co/storage/v1/object/public/collaterals/previews/brochure-preview.png",
-    },
-    {
-        "id": 7,
-        "title": "CRO & Funnel Optimization Brochure",
-        "type": "brochure",
-        "summary": "Deep dive into our conversion optimization and behavior analytics methodology.",
-        "services": ["Analytics & Business Intelligence", "Paid Advertising Support"],
-        "file_url": "https://example-supabase.supabase.co/storage/v1/object/public/collaterals/cro-brochure.pdf",
-        "preview_url": "https://example-supabase.supabase.co/storage/v1/object/public/collaterals/previews/cro-preview.png",
-    },
-    {
-        "id": 8,
-        "title": "Performance Marketing Pitch Deck",
-        "type": "deck",
-        "summary": "Executive-ready deck positioning Cybage's paid media capabilities vs. competitors.",
-        "services": ["Paid Advertising Support", "Media Mix Modeling (MMM)"],
-        "file_url": "https://example-supabase.supabase.co/storage/v1/object/public/collaterals/perf-marketing-deck.pdf",
-        "preview_url": "https://example-supabase.supabase.co/storage/v1/object/public/collaterals/previews/perf-deck-preview.png",
-    },
-]
-
-INDUSTRIES = [
-    "Select Industry…", "E-Commerce / Retail", "B2B SaaS / Technology",
-    "BFSI (Banking & Financial Services)", "Healthcare & Pharma",
-    "FMCG / Consumer Goods", "Media & Entertainment", "Education / EdTech",
-    "Automotive", "Real Estate", "Manufacturing", "Other",
-]
+# Load data from Supabase
+try:
+    DIAGNOSTIC_MAPPING = load_services()
+    COLLATERALS = load_collaterals()
+    COMMON_PAIN_POINTS = load_pain_points()
+except Exception as e:
+    st.error(f"Failed to load data from Supabase: {e}")
+    st.stop()
 
 # ─────────────────────────────────────────────
 # ANALYSIS ENGINE
